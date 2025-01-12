@@ -1,0 +1,177 @@
+.post-header {
+    margin-bottom: calc(var(--gap) * 2);
+}
+
+.post-content, .toc {
+    font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
+}
+
+.toc {
+    font-size: 0.8em;
+    letter-spacing: 0.01em;
+}
+
+.toc:lang(zh),
+.toc:lang(jp),
+.toc:lang(ko) {
+    letter-spacing: 0.08em;
+    font-size: 0.75em;
+}
+
+.toc li {
+    line-height: 1.8;
+}
+
+.post-content {
+    line-height: 1.6;
+    letter-spacing: 0.2em;
+    font-size: 0.8em;
+    margin-top: var(--gap);
+    padding-top: var(--gap);
+    border-top: 1px solid rgba(150, 150, 150, 0.8);
+}
+
+.post-content:lang(zh),
+.post-content:lang(jp),
+.post-content:lang(ko) {
+    font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
+}
+
+.post-content blockquote {
+    color: rgba(100, 100, 100, 1);
+    font-weight: 600;
+}
+
+.post-content h1 {
+    margin: 2.5rem auto 2rem;
+    font-size: 2.625rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+.post-content h1:lang(zh),
+.post-content h1:lang(jp),
+.post-content h1:lang(ko) {
+    font-size: 2.4rem;
+    letter-spacing: 0.02em;
+}
+
+.post-content h2 {
+    margin: 2rem auto 1.5rem;
+    font-size: 2.2rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+}
+
+.post-content h2:lang(zh),
+.post-content h2:lang(jp),
+.post-content h2:lang(ko) {
+    font-size: 2.15rem;
+    letter-spacing: 0.01em;
+}
+
+.post-content h3 {
+    margin: 1.5rem auto 1rem;
+    font-size: 1.8rem;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.post-content h3:lang(zh),
+.post-content h3:lang(jp),
+.post-content h3:lang(ko) {
+    font-size: 1.8rem;
+}
+
+.post-content h4 {
+    margin: 1.25rem auto 0.75rem;
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+.post-content h5 {
+    margin: 1rem auto 0.5rem;
+    font-size: 1.2rem;
+    font-weight: 500;
+    line-height: 1.6;
+    letter-spacing: 0.05em;
+}
+
+.post-content h6 {
+    margin: 1rem auto 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+    line-height: 1.6;
+    letter-spacing: 0.03em;
+}
+
+.post-content dl,
+.post-content ol,
+.post-content p,
+.post-content figure,
+.post-content ul {
+    margin-bottom: calc(var(--content-gap) * 1.2);
+    letter-spacing: 0.03em;
+    font-weight: 300;
+}
+
+.post-content dl:lang(zh),
+.post-content dl:lang(jp),
+.post-content dl:lang(ko),
+.post-content ol:lang(zh),
+.post-content ol:lang(jp),
+.post-content ol:lang(ko),
+.post-content p:lang(zh),
+.post-content p:lang(jp),
+.post-content p:lang(ko),
+.post-content figure:lang(zh),
+.post-content figure:lang(jp),
+.post-content figure:lang(ko),
+.post-content ul:lang(zh),
+.post-content ul:lang(jp),
+.post-content ul:lang(ko) {
+    margin-bottom: calc(var(--content-gap) * 1.2);
+    font-size: 0.9em;
+    line-height: 1.8;
+    letter-spacing: 0.07em;
+}
+
+@media screen and (max-width: 768px) {
+    .post-content h1 {
+        margin: 1.5rem auto 1rem;
+        font-size: 2.5rem;
+    }
+
+    .post-content h1:lang(zh),
+    .post-content h1:lang(jp),
+    .post-content h1:lang(ko) {
+        margin: 1.5rem auto 1rem;
+        font-size: 2.2rem;
+    }
+
+    .post-content h2 {
+        margin: 1.25rem auto 0.75rem;
+        font-size: 2.2rem;
+    }
+
+    .post-content h2:lang(zh),
+    .post-content h2:lang(jp),
+    .post-content h2:lang(ko) {
+        margin: 1.25rem auto 0.75rem;
+        font-size: 2rem;
+    }
+
+    .post-content h3 {
+        margin: 1.25rem auto 0.75rem;
+        font-size: 1.9rem;
+    }
+
+    .post-content h3:lang(zh),
+    .post-content h3:lang(jp),
+    .post-content h3:lang(ko) {
+        font-size: 1.75rem;
+    }
+}

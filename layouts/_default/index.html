@@ -1,0 +1,20 @@
+{{- define "main" }}
+
+{{- if (and site.Params.profileMode.enabled .IsHome) }}
+{{- partial "slides.html" . }}
+{{- partial "profile.html" . }}
+{{- else }} {{/* if not profileMode */}}
+{{- partial "help.html" . }}
+{{- end }}{{/* end profileMode */}}
+
+<style>
+    .main {
+        padding-top: calc(var(--gap) / 4);
+        min-height: calc(100vh - var(--footer-height));
+    }
+    .header {
+        display: none !important;
+    }
+</style>
+
+{{- end }}{{- /* end main */ -}}

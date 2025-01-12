@@ -1,0 +1,144 @@
+{{- define "main" }}
+
+{{- partial "source.html" . }}
+
+{{- $avatar := resources.Get site.Params.aboutAvatar -}}
+{{- $avatar = $avatar.Resize "180x180 webp" -}}
+
+{{- $descFile := .Resources.GetMatch "description.md" -}}
+{{- $content := "" -}}
+{{- if $descFile -}}
+    {{- $content = $descFile.Content -}}
+{{- end -}}
+<div class="about-header">
+    {{- range .Site.Languages -}}
+        {{- if ne . $.Site.Language -}}
+            <a href="/{{ .Lang }}/about" class="lang-switch" rel="noopener" title="{{ .LanguageName }}">{{ .LanguageName }}</a>
+        {{- end -}}
+    {{- end -}}
+</div>
+
+<div class="about-container">
+    <div class="bio-content">
+        <img src="{{ $avatar.RelPermalink }}" alt="{{ site.Params.profileMode.imageTitle }}" class="avatar" draggable="false">
+        {{ with .Page }}
+            {{ .Content | safeHTML }}
+        {{ end }}
+    </div>
+
+    <div class="bio-content">
+        {{ $content | safeHTML}}
+    </div>
+</div>
+
+<style>
+.main .about-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    max-width: 700px;
+    margin: 15px 0;
+}
+
+.main .about-header .lang-switch {
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    padding: 4px 8px;
+    border: 1px solid var(--primary);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.main .about-header .lang-switch:hover {
+    color: var(--theme);
+    background: var(--primary);
+}
+
+.main .about-container {
+    max-width: calc(var(--main-width) - var(--gap) * 4);
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
+}
+
+.main .bio-content {
+    line-height: 1.6;
+    overflow: hidden;
+    margin-bottom: 1em;
+    font-size: 0.9rem;
+    color: #2c3e50;
+}
+
+.main .bio-content h1, .main .bio-content h2, .main .bio-content h3, .main .bio-content h4, .main .bio-content h5 {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+[lang="zh"] .main .bio-content {
+    font-size: 0.95rem;
+    line-height: 2;
+    font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+}
+
+.main .avatar {
+    float: left;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    margin: 0 40px 30px 0;
+    object-fit: cover;
+    padding: 10px;
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.06);
+    transition: transform 0.3s ease;
+}
+
+.main .avatar:hover {
+    transform: scale(1.02);
+}
+
+.main .story-content {
+    line-height: 1.6;
+    font-size: 0.9rem;
+    color: #2c3e50;
+}
+
+[lang="zh"] .main .story-content {
+    font-size: 0.95rem;
+    line-height: 2;
+    font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+}
+
+.main p {
+    margin-bottom: 15px;
+    letter-spacing: 0.2px;
+    text-align: justify;
+}
+
+.main img[src*="#center"] {
+    margin: 1rem auto;
+}
+
+@media (max-width: 768px) {
+    .main .bio-content, 
+    .main .story-content {
+        font-size: 0.85rem;
+        line-height: 1.5;
+    }
+    
+    [lang="zh"] .main .bio-content,
+    [lang="zh"] .main .story-content {
+        font-size: 0.9rem;
+        line-height: 1.8;
+    }
+    
+    .main .avatar {
+        width: 150px;
+        height: 150px;
+        margin: 0 30px 30px 0;
+    }
+}
+</style>
+
+{{- end }}{{- /* end main */ -}}

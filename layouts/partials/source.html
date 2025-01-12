@@ -1,0 +1,66 @@
+{{ if .Params.source }}
+<div class="content-source" id="unique-source">
+    <div class="source-info">
+        {{ if eq .Site.Language.Lang "zh" }}
+            <div class="source-container">
+                <i class="fas fa-bookmark"></i>
+                <span class="source-label">内容来源：</span>
+                <span class="source-text">{{ .Params.source }}</span>
+            </div>
+        {{ else }}
+            <div class="source-container">
+                <i class="fas fa-bookmark"></i>
+                <span class="source-label">Source:</span>
+                <span class="source-text">{{ .Params.source }}</span>
+            </div>
+        {{ end }}
+    </div>
+</div>
+
+<style>
+    #unique-source .source-info {
+        background-color: #f8f9fa;
+        border-left: 4px solid #6c757d;
+        border-radius: 4px;
+        padding: 0.8rem 1.2rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    #unique-source .source-container {
+        display: flex;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        color: #495057;
+        font-size: 0.95rem;
+    }
+    
+    #unique-source .source-container i {
+        color: #6c757d;
+    }
+    
+    #unique-source .source-label {
+        font-weight: 600;
+        white-space: nowrap;
+    }
+    
+    #unique-source .source-text {
+        color: #0066cc;
+        word-break: break-word;
+    }
+    
+    @media (max-width: 768px) {
+        #unique-source .source-info {
+            padding: 0.2rem;
+        }
+
+        #unique-source .source-container {
+            font-size: 0.8rem;
+        }
+        
+        #unique-source .source-text {
+            font-size: 0.8rem;
+        }
+    }
+</style>
+{{ end }}

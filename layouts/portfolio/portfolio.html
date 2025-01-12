@@ -1,0 +1,630 @@
+{{- define "main" }}
+
+{{- $ctx := site.Params.portfolio }}
+
+{{- $imgs := slice }}
+{{- range sort (resources.Match (printf "%s/*.jpg" $ctx.imageDir)) ".Name" "desc" }}
+   {{- $imgs = append . $imgs }}
+{{- end }}
+{{- range sort (resources.Match (printf "%s/*.png" $ctx.imageDir)) ".Name" "desc" }}
+   {{- $imgs = append . $imgs }}
+{{- end }}
+
+{{- $webpSmall := slice }}
+{{- $webpLarge := slice }}
+{{- range $img := $imgs }}
+    {{- $processableFormats := (slice "jpg" "jpeg" "png" "tif" "bmp" "gif") -}}
+    {{- if hugo.IsExtended -}}
+        {{- $processableFormats = $processableFormats | append "webp" -}}
+    {{- end -}}
+    {{- $prod := (hugo.IsProduction | or (eq site.Params.env "production")) }}
+    {{- if and (in $processableFormats $img.MediaType.SubType) (eq $prod true)}}
+        {{- if hugo.IsExtended }}
+            {{- $webpSmall = $webpSmall | append ($img.Resize (printf "%dx webp" $ctx.smallImageWidth)) }}
+            {{- $webpLarge = $webpLarge | append ($img.Resize (printf "%dx webp" $ctx.largeImageWidth)) }}
+        {{- else }}
+            {{- $webpSmall = $webpSmall | append ($img.Resize (printf "%dx" $ctx.smallImageWidth)) }}
+            {{- $webpLarge = $webpLarge | append ($img.Resize (printf "%dx" $ctx.largeImageWidth)) }}
+        {{- end }}
+    {{- else }}
+        {{- if hugo.IsExtended }}
+            {{- $webpSmall = $webpSmall | append ($img.Resize (printf "%dx webp" $ctx.smallImageWidth)) }}
+            {{- $webpLarge = $webpLarge | append ($img.Resize (printf "%dx%d webp" $img.Width $img.Height)) }}
+        {{- else }}
+            {{- $webpSmall = $webpSmall | append $img }}
+            {{- $webpLarge = $webpLarge | append $img }}
+        {{- end }}
+    {{- end }}
+{{- end }}
+
+<div class="portfolio-header">
+    {{- range .Site.Languages -}}
+        {{- if ne . $.Site.Language -}}
+            <a href="/{{ .Lang }}/portfolio" class="lang-switch" rel="noopener" title="{{ .LanguageName }}">{{ .LanguageName }}</a>
+        {{- end -}}
+    {{- end -}}
+    <div class="portfolio-instructions">
+        Click image to view fullscreen
+    </div>
+</div>
+
+<div id="fullscreen-overlay">
+    <div>
+        <div>
+            <img id="fullscreen-image" />
+        </div>
+        <div id="fullscreen-description">
+        </div>
+        <div id="fullscreen-metadata">
+            <p class="metadata-location"></p>
+            <p class="metadata-date"></p>
+        </div>
+    </div>
+    <div class="close-button">&times;</div>
+    <div id="prev-button">&#10094;</div>
+    <div id="next-button">&#10095;</div>
+</div>
+
+<div class="portfolio-container">
+    <ul class="portfolio-grid">
+{{- range $index, $img := $webpSmall }}
+        <li class="portfolio-item" data-large-src="{{ (index $webpLarge $index).RelPermalink }}">
+            <img src="{{ $img.RelPermalink }}" alt="{{ $img.Name }}" class="portfolio-image" loading="lazy" />
+            {{- $descFile := resources.GetMatch (printf "%s/%s.yaml" $ctx.imageDir (path.Base $img.Name)) }}
+            <div class="portfolio-description">
+                {{- $date := "" }}
+                {{- with $img.Exif }}
+                    {{- with .Date }}
+                        {{- $date = .Format "2006-01-02 15:04:05" }}
+                    {{- end }}
+                {{- end }}
+
+                {{- $location := "Unknown" }}
+                {{- $title := "" }}
+                {{- if $descFile }}
+                {{- $yaml := transform.Unmarshal $descFile.Content }}
+                {{- with index $yaml site.Language.Lang }}
+                    {{- $location = .location }}
+                    {{- $title = .title }}
+                    {{- $date = .date | default $date }}
+                    <p class="description-text">{{ .description }}</p>
+                {{- end }}
+                {{- end }}
+                <div class="description-footer">
+                {{- if $title }}
+                    <p class="description-meta title"><strong>{{ $title }}</strong></p>
+                {{- end }}
+                    <p class="description-meta dimmed"><strong>Location:</strong> {{ $location }}</p>
+                {{- if $date }}
+                    <p class="description-meta dimmed"><strong>Capture Date:</strong> {{ $date }}</p>
+                {{- else }}
+                    <p class="description-meta dimmed"><strong>Capture Date:</strong> {{ .date | default "Unknown" }}</p>
+                {{- end }}
+                </div>
+            </div>
+        </li>
+{{- end }}
+    </ul>
+</div>
+
+<style>
+    /* portfolio Header */
+    .main .portfolio-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1500px;
+        margin: 15px auto;
+        padding: 0 20px;
+    }
+
+    .main .portfolio-header .lang-switch {
+        color: var(--primary);
+        text-decoration: none;
+        font-size: 0.9rem;
+        padding: 4px 8px;
+        border: 1px solid var(--primary);
+        border-radius: 4px;
+        transition: all 0.3s ease;
+    }
+
+    .main .portfolio-header .lang-switch:hover {
+        color: var(--theme);
+        background: var(--primary);
+    }
+
+    /* Instructions */
+    .main .portfolio-instructions {
+        color: #666;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+        font-size: 0.95rem;
+        padding: 10px;
+        background: #f5f5f5;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        letter-spacing: 0.03em;
+    }
+
+    /* portfolio Container */
+    .main .portfolio-container {
+        padding: 20px 0;
+        max-width: 1500px;
+        margin: 0 auto;
+    }
+
+    /* Grid Layout */
+    .main .portfolio-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        padding: 0;
+        list-style: none;
+    }
+
+    /* portfolio Items */
+    .main .portfolio-item {
+        aspect-ratio: 1;
+        overflow: hidden;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        max-width: 300px;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+        position: relative;
+    }
+
+    .main .portfolio-item:hover {
+        transform: scale(1.02);
+    }
+
+    .main .portfolio-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+        transition: transform 0.3s ease;
+    }
+
+    .main .portfolio-item:hover img {
+        transform: scale(1.05);
+    }
+
+    .main .portfolio-image {
+        width: 100%;
+        height: auto;
+    }
+
+    /* Description Overlay */
+    .main .portfolio-description {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0);
+        color: white;
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: all 0.3s ease;
+        pointer-events: none;
+    }
+
+    .main .portfolio-item:not(.clicked):hover .portfolio-description {
+        background: rgba(0, 0, 0, 0.7);
+        opacity: 1;
+    }
+
+    /* Description Text */
+    .main .description-text {
+        width: 100%;
+        text-align: center;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+        font-weight: 100;
+        font-size: 0.8rem;
+        letter-spacing: 0.06em;
+        line-height: 1.5;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        position: relative;
+        transform: translateY(-20px);
+        margin-bottom: 2rem;
+    }
+
+    .main .description-footer {
+        width: 100%;
+        text-align: center;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+        font-weight: 200;
+        font-size: 0.6rem;
+        line-height: 1.5;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        margin: 0;
+        position: absolute;
+        bottom: 40px;
+    }
+
+    .main .description-footer .title {
+        line-height: 3;
+        letter-spacing: 0.03em;
+    }
+
+    .main .dimmed {
+        color: rgba(230, 230, 230, 0.8) !important;
+    }
+
+    /* Fullscreen Overlay */
+    .main #fullscreen-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.9);
+        z-index: 9999;
+        cursor: pointer;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        overflow: hidden;
+        touch-action: none;
+    }
+
+    .main #fullscreen-overlay > div:first-of-type {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        max-height: 90vh;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .main #fullscreen-overlay > div:first-of-type > div:first-of-type {
+        width: 100%;
+        height: 77vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        transform: translateX(0);
+        transition: transform 0.3s ease;
+        @media only screen and (max-width: 768px) {
+            height: 50vh;
+        }
+    }
+
+    /* Fullscreen Image */
+    .main #fullscreen-image {
+        max-width: {{ $ctx.largeImageWidth }}px;
+        width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        margin: 0 auto;
+        opacity: 0;
+        transform: translateX(0);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    /* Fullscreen Description */
+    .main #fullscreen-description {
+        margin-top: 20px;
+        color: white;
+        text-align: center;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+        width: 100%;
+        opacity: 0;
+        transform: translateX(0);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .main #fullscreen-description p {
+        width: 100%;
+        text-align: center;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+        font-weight: 200;
+        letter-spacing: 0.05em;
+        line-height: 1.6;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        margin: 5px 0;
+        position: static;
+        transform: translateX(0);
+        opacity: 0;
+        font-size: 0.9rem;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .main #fullscreen-metadata {
+        margin-top: 10px;
+        color: rgba(255, 255, 255, 0.6);
+        text-align: center;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+        font-size: 0.6rem;
+        opacity: 0;
+        transform: translateX(0);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .main #fullscreen-metadata p {
+        margin: 5px 0;
+    }
+
+    .main #fullscreen-metadata .metadata-location::before {
+        content: "Location: ";
+        font-weight: bold;
+    }
+
+    .main #fullscreen-metadata .metadata-date::before {
+        content: "Created: ";
+        font-weight: bold;
+    }
+
+    /* Navigation Controls */
+    .main .close-button {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        color: white;
+        font-size: 30px;
+        cursor: pointer;
+        opacity: 0;
+        transition: opacity 0.3s ease, color 0.2s ease;
+    }
+
+    .main #prev-button, .main #next-button {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        color: white;
+        font-size: 40px;
+        cursor: pointer;
+        user-select: none;
+        opacity: 0;
+        transition: opacity 0.3s ease, color 0.2s ease;
+    }
+
+    .main #prev-button {
+        left: 30px;
+    }
+
+    .main #next-button {
+        right: 30px;
+    }
+
+    .main #prev-button:hover, .main #next-button:hover, .main .close-button:hover {
+        color: #ddd;
+    }
+
+    /* Animation Classes */
+    .main .visible {
+        opacity: 1 !important;
+    }
+
+    .main .slide-left {
+        transform: translateX(-100px) !important;
+    }
+
+    .main .slide-right {
+        transform: translateX(100px) !important;
+    }
+
+    .main .slide-center {
+        transform: translateX(0) !important;
+    }
+
+    /* Mobile Responsiveness */
+    @media screen and (max-width: 768px) {
+        .main .portfolio-grid {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .main .portfolio-item {
+            margin: 10px 0;
+            max-width: 100%;
+            width: 100%;
+            transition: transform 0.2s ease;
+        }
+
+        .main .portfolio-container {
+            padding: px;
+        }
+
+        .main #fullscreen-description {
+            margin-top: 10px;
+        }
+
+        .main #fullscreen-overlay > div:first-of-type {
+            top: 45%;
+        }
+
+        .main #prev-button, .main #next-button {
+            display: none;
+        }
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const overlay = document.getElementById('fullscreen-overlay');
+    const fullscreenImage = document.getElementById('fullscreen-image');
+    const fullscreenDesc = document.getElementById('fullscreen-description');
+    const fullscreenMetadata = document.getElementById('fullscreen-metadata');
+    const prevButton = document.getElementById('prev-button');
+    const nextButton = document.getElementById('next-button');
+    const closeButton = document.querySelector('.close-button');
+    const portfolioItems = Array.from(document.querySelectorAll('.portfolio-item'));
+    let currentIndex = 0;
+    let touchStartX = 0;
+    let touchEndX = 0;
+    let isMobile = window.innerWidth <= 768;
+
+    function showImage(index, direction = 'right') {
+        currentIndex = index;
+        const item = portfolioItems[index];
+        const largeSrc = item.dataset.largeSrc;
+        const desc = item.querySelector('.portfolio-description');
+        
+        // Reset classes
+        fullscreenImage.classList.remove('visible', 'slide-left', 'slide-right', 'slide-center');
+        fullscreenDesc.classList.remove('visible', 'slide-left', 'slide-right', 'slide-center');
+        fullscreenMetadata.classList.remove('visible');
+        
+        // Add slide direction
+        if (direction === 'left') {
+            fullscreenImage.classList.add('slide-left');
+            fullscreenDesc.classList.add('slide-left');
+        } else {
+            fullscreenImage.classList.add('slide-right');
+            fullscreenDesc.classList.add('slide-right');
+        }
+        
+        // Force reflow
+        void fullscreenImage.offsetWidth;
+        
+        fullscreenImage.src = largeSrc;
+        if (desc) {
+            const descriptionText = desc.querySelector('.description-text')?.innerHTML || '';
+            const location = desc.querySelector('.description-meta:first-child')?.textContent || '';
+            const date = desc.querySelector('.description-meta:last-child')?.textContent || '';
+            
+            fullscreenDesc.innerHTML = `<p>${descriptionText}</p>`;
+            fullscreenMetadata.innerHTML = `
+                <p class="metadata-location">${location}</p>
+                <p class="metadata-date">${date}</p>
+            `;
+        }
+        
+        // Show elements and center them
+        setTimeout(() => {
+            fullscreenImage.classList.add('visible', 'slide-center');
+            if (desc) {
+                fullscreenDesc.classList.add('visible', 'slide-center');
+                fullscreenMetadata.classList.add('visible');
+                Array.from(fullscreenDesc.children).forEach((p, i) => {
+                    setTimeout(() => p.classList.add('visible'), i * 100);
+                });
+            }
+        }, 50);
+    }
+
+    function showNext() {
+        const nextIndex = (currentIndex + 1) % portfolioItems.length;
+        showImage(nextIndex, 'right');
+    }
+
+    function showPrev() {
+        const prevIndex = (currentIndex - 1 + portfolioItems.length) % portfolioItems.length;
+        showImage(prevIndex, 'left');
+    }
+
+    function showOverlay() {
+        overlay.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        setTimeout(() => {
+            overlay.classList.add('visible');
+            closeButton.classList.add('visible');
+            if (!isMobile) {
+                prevButton.classList.add('visible');
+                nextButton.classList.add('visible');
+            }
+        }, 50);
+    }
+
+    function hideOverlay() {
+        overlay.classList.remove('visible');
+        closeButton.classList.remove('visible');
+        prevButton.classList.remove('visible');
+        nextButton.classList.remove('visible');
+        setTimeout(() => {
+            overlay.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            // Remove clicked class from all items when overlay is closed
+            portfolioItems.forEach(item => item.classList.remove('clicked'));
+        }, 300);
+    }
+
+    // Touch event handlers
+    overlay.addEventListener('touchstart', (e) => {
+        if (isMobile) {
+            touchStartX = e.touches[0].clientX;
+        }
+    }, { passive: true });
+
+    overlay.addEventListener('touchmove', (e) => {
+        if (isMobile) {
+            touchEndX = e.touches[0].clientX;
+        }
+    }, { passive: true });
+
+    overlay.addEventListener('touchend', () => {
+        if (isMobile) {
+            const swipeDistance = touchEndX - touchStartX;
+            const minSwipeDistance = 50;
+
+            if (Math.abs(swipeDistance) >= minSwipeDistance) {
+                if (swipeDistance > 0) {
+                    showPrev();
+                } else {
+                    showNext();
+                }
+            }
+        }
+    });
+
+    portfolioItems.forEach((item, index) => {
+        item.addEventListener('click', function(e) {
+            currentIndex = index;
+            // Add clicked class to current item
+            item.classList.add('clicked');
+            showImage(currentIndex);
+            showOverlay();
+            e.stopPropagation();
+        });
+    });
+
+    overlay.addEventListener('click', function(e) {
+        hideOverlay();
+    });
+
+    prevButton.addEventListener('click', function(e) {
+        e.stopPropagation();
+        showPrev();
+    });
+
+    nextButton.addEventListener('click', function(e) {
+        e.stopPropagation();
+        showNext();
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (overlay.style.display === 'block') {
+            if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                showPrev();
+            } else if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                showNext();
+            } else if (e.key === 'Escape') {
+                hideOverlay();
+            }
+        }
+    });
+
+    window.addEventListener('resize', () => {
+        isMobile = window.innerWidth <= 768;
+    });
+});
+</script>
+
+{{- end }}{{- /* end main */ -}}

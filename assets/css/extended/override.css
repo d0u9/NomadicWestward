@@ -1,0 +1,15 @@
+:root {
+  --main-width: 1024px;
+}
+
+.main .profile {
+    min-height: calc(100vh - var(--header-height) - var(--footer-height) -(var(--gap)* 2) - (var(--main-width) / 2));
+}
+
+.main .buttons {
+    max-width: 600px;
+}
+
+.profile img {
+  border-radius: 17%;
+}
