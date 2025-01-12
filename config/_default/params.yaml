@@ -1,0 +1,31 @@
+# Use my opengraph protocol
+description: "At last, you shine — the end of my journey."
+images:
+  - "/siteassets/open-graph-image-text-512x512.png"
+defaultTheme: light # dark, light, auto
+disableThemeToggle: true
+aboutAvatar: "images/avatar.jpg"
+label:
+  icon: "siteassets/icon.png"
+portfolio:
+  useWebp: true
+  imageDir: portfolio
+  smallImageWidth: 600
+  largeImageWidth: 2000
+assets:
+  favicon: "/favicons/favicon.ico"
+  favicon16x16: "/favicons/favicon-16x16.png"
+  favicon32x32: "/favicons/favicon-32x32.png"
+  apple_touch_icon: "/favicons/apple-touch-icon.png"
+profileMode:
+  enabled: true
+  subtitle: "At last, you shine — the end of my journey."
+  imageUrl:  "images/logo-square-dark-512x512.png"
+  imageTitle: "Nomadic Westward"
+  imageWidth: 120
+  imageHeight: 120
+  slides:
+    useWebp: true
+    imageDir: "slides"
+    autoplay: 3000
+  

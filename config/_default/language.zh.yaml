@@ -1,0 +1,30 @@
+languageName: "中文"
+languageCode: zh
+weight: 2
+taxonomies:
+  category: categories
+  tag: tags
+menu:
+  main:
+    - name: 首页
+      url: /
+      weight: 1
+    - name: 作品集
+      url: /portfolio
+      weight: 2
+    - name: 文章
+      url: /articles
+      weight: 3
+    - name: 关于
+      url: /about
+      weight: 99
+params:
+  profileMode:
+    subtitle: "你终于闪耀了么？我旅途的终点。"
+    buttons:
+      - name: 作品集
+        url: "/zh/portfolio"
+      - name: 文章
+        url: "/zh/articles"
+      - name: 关于
+        url: "/zh/about"

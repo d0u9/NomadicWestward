@@ -1,0 +1,30 @@
+languageName: "English"
+languageCode: en
+weight: 1
+taxonomies:
+  category: 分类
+  tag: 标签
+menu:
+  main:
+    - name: Home
+      url: /
+      weight: 1
+    - name: Portfolio
+      url: portfolio
+      weight: 2
+    - name: Articles
+      url: articles
+      weight: 3
+    - name: About
+      url: about
+      weight: 99
+params:
+  profileMode:
+    subtitle: "At last, you shine — the end of my journey."
+    buttons:
+      - name: Portfolio
+        url: /en/portfolio
+      - name: Articles
+        url: "/en/articles"
+      - name: About
+        url: "/en/about"
