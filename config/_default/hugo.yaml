@@ -2,7 +2,7 @@
 baseURL: https://NomadWest.org
 languageCode: en-us
 title: Nomadic Westward - Dev
-theme: ["PaperMod"]
+theme: ["hugo-cloak-email", "PaperMod"]
 
 defaultContentLanguage: en
 defaultContentLanguageInSubdir: true
