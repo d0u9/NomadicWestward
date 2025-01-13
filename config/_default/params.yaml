@@ -4,6 +4,7 @@ images:
   - "/siteassets/open-graph-image-text-512x512.png"
 defaultTheme: light # dark, light, auto
 disableThemeToggle: true
+ShowShareButtons: true
 aboutAvatar: "images/avatar.jpg"
 label:
   icon: "siteassets/icon.png"
