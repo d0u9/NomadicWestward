@@ -2,6 +2,10 @@
 
 This is a personal site that showcases my work and reflections on photography, but it is not limited to that. The boundaries blur when the subject matter touches on social issues or other unique contexts.
 
+## Instrument
+
+There are many ways to interact with the world, including photography, reading, and of course, music. Since the start of the southern hemisphere's winter in 2023, I have been playing the bamboo flute, a traditional Chinese instrument. It fills empty moments and frees me from endlessly wondering about the meaning of life.
+
 ## Technical Side
 
 This site is powered by the Hugo framework, an open-source Golang static site generator, and is hosted on Cloudflare Pages. Several pages, including this one, were designed with the help of AI.

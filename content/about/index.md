@@ -16,3 +16,5 @@ As an amateur freelance photographer, my interests cover a wide range. I first g
 However, things started to change with the COVID pandemic, as people were locked down in their local regions. Inspired by the stories unfolding around me and a call from deep within my heart, I shifted my focus to documenting everyday routines and moments that happened within my reach.
 
 Gradually, as I delved deeper into the world of photography, my aesthetic pursuits grew stronger. Photography, to me, is not just about documentation but also about its visual and emotional appeal. More profoundly, it is a language that speaks between people — without vocal cords, but through sentiments.
+
+__My Tags: Photographer; Bamboo Flute player; Storyteller; Writer; Programmer; Linux Operating System Hacker; Born on the roof of the world;__
