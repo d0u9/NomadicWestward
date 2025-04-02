@@ -10,7 +10,7 @@ menu:
       url: /
       weight: 1
     - name: Portfolio
-      url: portfolio
+      url: http://portfolio.nomadwest.org/
       weight: 2
     - name: Articles
       url: articles
@@ -23,7 +23,7 @@ params:
     subtitle: "At last, you shine — the end of my journey."
     buttons:
       - name: Portfolio
-        url: /en/portfolio
+        url: http://portfolio.nomadwest.org/
       - name: Articles
         url: "/en/articles"
       - name: About
