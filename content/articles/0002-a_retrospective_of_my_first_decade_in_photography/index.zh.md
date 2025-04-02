@@ -1,5 +1,5 @@
 ---
-title: 'A Retrospective of My First Decade in Photography'
+title: '回顾：我的第一个摄影十年'
 slug: 'a-retrospective-of-my-first-decade-in-photography'
 date: '2025-02-28T23:23:21+11:00'
 description: 'Sometimes the experience itself matters more than the photography. — Alec Soth'

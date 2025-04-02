@@ -4,7 +4,6 @@ slug: 'picutres-of-my-2024'
 date: '2024-12-31T23:39:21+11:00'
 description: '这19张照片中的大多数来自2024年9月到10月的国内旅行。旅程横跨大半个中国，从西部的青海省出发，途经东部浙江省，最后折返青海省。'
 
-
 isCJKLanguage: true
 
 ShowToc: true
